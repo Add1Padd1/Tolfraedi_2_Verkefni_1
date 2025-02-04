@@ -1,0 +1,21 @@
+{
+  "name": "vef2-2025-v1",
+  "version": "1.0.0",
+  "description": "- Lausn á verkefni 1 í vefforritun 2",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vefforritun/vef2-2025-v1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vefforritun/vef2-2025-v1/issues"
+  },
+  "homepage": "https://github.com/vefforritun/vef2-2025-v1#readme"
+}
