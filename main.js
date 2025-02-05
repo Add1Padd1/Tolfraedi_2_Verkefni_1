@@ -1,6 +1,10 @@
 import fs from 'node:fs/promises';
 import path, { parse } from 'node:path';
 const INDEX_PATH = './data/index.json';
+const CORRUPT_PATH = './data/corrupt.json';
+const CSS_PATH = './data/css.json';
+const HTML_PATH = './data/html.json';
+const JS_PATH = './data/js.json';
 /**
  * Les skrá og skilar gögnum eða null.
  * @param {string} filePath Skráin sem á að lesa
@@ -34,8 +38,14 @@ async function writeHtml(data) {
 
   let html = '';
   for (const item of data) {
-    html += `<li>${item.title}</li>\n`;
+    if (item.title && item.file) {
+      const htmlFile = item.file.replace('.json', '.html');
+      html += `<li><a href="./dist/${htmlFile}">${item.title}</a></li>\n`;
+    } else {
+      console.error('Invalid data', item);
+    }
   }
+
   const htmlContent = `
   <!doctype html>
   <html>
@@ -50,6 +60,12 @@ async function writeHtml(data) {
   </html>
   `;
   fs.writeFile(htmlFilePath, htmlContent, 'utf8');
+}
+
+async function writeOtherHtml(data) {
+  const cssHtmlFilePath = 'dist/css.html';
+  const htmlHtmlFilePath = 'dist/html.html';
+  const jsHtmlFilePath = 'dist/js.html';
 }
 
 /**
