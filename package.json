@@ -5,7 +5,8 @@
   "main": "main.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "browser-sync start --config bs-config.cjs"
   },
   "repository": {
     "type": "git",
@@ -17,5 +18,11 @@
   "bugs": {
     "url": "https://github.com/vefforritun/vef2-2025-v1/issues"
   },
-  "homepage": "https://github.com/vefforritun/vef2-2025-v1#readme"
+  "homepage": "https://github.com/vefforritun/vef2-2025-v1#readme",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.3"
+  }
 }
