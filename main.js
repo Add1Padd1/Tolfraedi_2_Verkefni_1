@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path, { parse } from 'node:path';
 import _ from 'lodash';
+
 const INDEX_PATH = './data/index.json';
 const CORRUPT_PATH = './data/corrupt.json';
 const CSS_PATH = './data/css.json';
@@ -53,7 +54,12 @@ async function writeHtml(data) {
         const filePath = path.join(DATA_FOLDER, fileName);
         const fileData = await readJson(filePath);
         console.log('fileData', fileData);
-        if (fileData && Array.isArray(fileData.questions)) {
+        if (
+          fileData &&
+          typeof fileData === 'object' &&
+          'questions' in fileData &&
+          Array.isArray(fileData.questions)
+        ) {
           const htmlFile = item.file.replace('.json', '.html');
           html += `<div class="link-container"><a href="${htmlFile}" class="link">${item.title}</a></div>\n`;
         } else {
