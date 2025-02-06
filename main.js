@@ -53,7 +53,7 @@ async function writeHtml(data) {
       if (VALID_FILES.includes(fileName)) {
         const filePath = path.join(DATA_FOLDER, fileName);
         const fileData = await readJson(filePath);
-        console.log('fileData', fileData);
+        console.log('fileData er: ', fileData);
         if (
           fileData &&
           typeof fileData === 'object' &&
@@ -131,7 +131,7 @@ async function writeOtherHtml(data, filepath) {
   let title = `${data.title}`;
   let content = '';
   console.log('writing to', filepath);
-  for (const item of data.questions) {
+  for (const item of data) {
     if (item.question && Array.isArray(item.answers)) {
       console.log('svorin', item.answers);
       content += `<div class="question-container">\n`;
@@ -318,7 +318,7 @@ async function writeOtherHtml(data, filepath) {
     </body>
   </html>
   `;
-  console.log('HTML content:', htmlContent); // Log the HTML content
+  console.log('HTML content:', htmlContent);
   await fs.writeFile(filepath, htmlContent, 'utf8');
   console.log('File written successfully');
 }
