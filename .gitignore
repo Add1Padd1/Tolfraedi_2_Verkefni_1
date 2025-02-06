@@ -1,1 +1,3 @@
-dist/index.html, dist/css.html, dist/html.html, dist/js.html
+dist/css.html, dist/html.html, dist/js.html, dist/index.html
+node_modules
+coverage
