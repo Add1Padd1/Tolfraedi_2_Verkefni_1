@@ -7,6 +7,9 @@ const CSS_PATH = './data/css.json';
 const HTML_PATH = './data/html.json';
 const JS_PATH = './data/js.json';
 
+const DATA_FOLDER = './data';
+const VALID_FILES = ['corrupt.json', 'css.json', 'html.json', 'js.json'];
+
 const cssHtmlFilePath = 'dist/css.html';
 const htmlHtmlFilePath = 'dist/html.html';
 const jsHtmlFilePath = 'dist/js.html';
@@ -45,8 +48,19 @@ async function writeHtml(data) {
   let html = '';
   for (const item of data) {
     if (item.title && item.file) {
-      const htmlFile = item.file.replace('.json', '.html');
-      html += `<div class="link-container"><a href="${htmlFile}" class="link">${item.title}</a></div>\n`;
+      const fileName = path.basename(item.file);
+      if (VALID_FILES.includes(fileName)) {
+        const filePath = path.join(DATA_FOLDER, fileName);
+        const fileData = await readJson(filePath);
+        if (fileData && fileData.questions) {
+          const htmlFile = item.file.replace('.json', '.html');
+          html += `<div class="link-container"><a href="${htmlFile}" class="link">${item.title}</a></div>\n`;
+        } else {
+          console.error(`Invalid or missing questions in file ${fileName}`);
+        }
+      } else {
+        console.error(`File ${fileName} is not a valid data file`);
+      }
     } else {
       console.error('Invalid data', item);
     }
