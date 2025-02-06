@@ -58,6 +58,7 @@ async function writeHtml(data) {
           fileData &&
           typeof fileData === 'object' &&
           'questions' in fileData &&
+          fileData.questions !== null &&
           Array.isArray(fileData.questions)
         ) {
           const htmlFile = item.file.replace('.json', '.html');
