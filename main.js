@@ -131,26 +131,30 @@ async function writeOtherHtml(data, filepath) {
   let title = `${data.title}`;
   let content = '';
   console.log('writing to', filepath);
-  for (const item of data) {
-    if (item.question && Array.isArray(item.answers)) {
-      console.log('svorin', item.answers);
-      content += `<div class="question-container">\n`;
-      content += `<p class="question">${_.escape(item.question)}</p>\n`;
-      for (const answer of item.answers) {
-        if (answer.answer) {
-          content += `<label class="answer"><input type="radio" name="question-${_.escape(
-            item.question
-          )}" value="${_.escape(answer.answer)}" data-correct="${
-            answer.correct
-          }"> ${_.escape(answer.answer)}</label><br>\n`;
-        } else {
-          console.error('Invalid answer', answer);
+  if (Array.isArray(data.questions)) {
+    for (const item of data.questions) {
+      if (item.question && Array.isArray(item.answers)) {
+        console.log('svorin', item.answers);
+        content += `<div class="question-container">\n`;
+        content += `<p class="question">${_.escape(item.question)}</p>\n`;
+        for (const answer of item.answers) {
+          if (answer.answer) {
+            content += `<label class="answer"><input type="radio" name="question-${_.escape(
+              item.question
+            )}" value="${_.escape(answer.answer)}" data-correct="${
+              answer.correct
+            }"> ${_.escape(answer.answer)}</label><br>\n`;
+          } else {
+            console.error('Invalid answer', answer);
+          }
         }
+        content += `</div>\n`;
+      } else {
+        console.error('Invalid data', item);
       }
-      content += `</div>\n`;
-    } else {
-      console.error('Invalid data', item);
     }
+  } else {
+    console.error('Invalid or missing questions in data');
   }
 
   const htmlContent = `
