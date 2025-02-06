@@ -52,7 +52,8 @@ async function writeHtml(data) {
       if (VALID_FILES.includes(fileName)) {
         const filePath = path.join(DATA_FOLDER, fileName);
         const fileData = await readJson(filePath);
-        if (fileData && fileData.questions) {
+        console.log('fileData', fileData);
+        if (fileData && Array.isArray(fileData.questions)) {
           const htmlFile = item.file.replace('.json', '.html');
           html += `<div class="link-container"><a href="${htmlFile}" class="link">${item.title}</a></div>\n`;
         } else {
