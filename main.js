@@ -81,9 +81,9 @@ async function writeOtherHtml(data, filepath) {
         if (answer.answer) {
           content += `<label><input type="radio" name="question-${_.escape(
             item.question
-          )}" value="${_.escape(answer.answer)}"> ${_.escape(
-            answer.answer
-          )}</label><br>\n`;
+          )}" value="${_.escape(answer.answer)}" data-correct="${
+            answer.correct
+          }"> ${_.escape(answer.answer)}</label><br>\n`;
         } else {
           console.error('Invalid answer', answer);
         }
@@ -103,10 +103,22 @@ async function writeOtherHtml(data, filepath) {
     <title>${title}</title>
     </head>
     <body>
-      <form>
+      <form id="quiz-form">
         ${content}
-        <button type="submit">Submit</button>
+        <button type="button" id="submit-button">Submit</button>
       </form>
+      <script>
+        document.getElementById('submit-button').addEventListener('click', function() {
+          const questions = document.querySelectorAll('.question');
+          questions.forEach(question => {
+            const selectedAnswer = question.querySelector('input[type="radio"]:checked');
+            if (selectedAnswer) {
+              const isCorrect = selectedAnswer.getAttribute('data-correct') === 'true';
+              selectedAnswer.parentElement.style.color = isCorrect ? 'green' : 'red';
+            }
+          });
+        });
+      </script>
     </body>
   </html>
   `;
