@@ -79,7 +79,7 @@ async function writeOtherHtml(data, filepath) {
       content += `<p>${_.escape(item.question)}</p>\n`;
       for (const answer of item.answers) {
         if (answer.answer) {
-          content += `<label><input type="checkbox" name="question-${_.escape(
+          content += `<label><input type="radio" name="question-${_.escape(
             item.question
           )}" value="${_.escape(answer.answer)}"> ${_.escape(
             answer.answer
@@ -98,6 +98,8 @@ async function writeOtherHtml(data, filepath) {
   <!doctype html>
   <html>
     <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../styles.css">
     <title>${title}</title>
     </head>
     <body>
