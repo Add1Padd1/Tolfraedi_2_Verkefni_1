@@ -9,3 +9,5 @@ Keyrum með:
 npm install
 
 node main.js
+
+Langaði rosa mikið að hafa alla klassana í styles.css en af einhverri fáránlegri ástæðu þá náðust html skrárnar ekki að tengjast henni sama hvað ég gerði. Biðst forláts fyrir löngum og messy kóða.

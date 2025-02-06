@@ -46,7 +46,7 @@ async function writeHtml(data) {
   for (const item of data) {
     if (item.title && item.file) {
       const htmlFile = item.file.replace('.json', '.html');
-      html += `<li><a href="${htmlFile}">${item.title}</a></li>\n`;
+      html += `<div class="link-container"><a href="${htmlFile}" class="link">${item.title}</a></div>\n`;
     } else {
       console.error('Invalid data', item);
     }
@@ -56,12 +56,49 @@ async function writeHtml(data) {
   <!doctype html>
   <html>
     <head>
+    <meta charset="utf-8" />
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 600px;
+      }
+      .link-container {
+        width: 100%;
+        margin: 10px 0;
+      }
+      .link {
+        display: block;
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        color: black;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+      .link:hover {
+        background-color: #e0e0e0;
+      }
+    </style>
     <title>v1</title>
     </head>
     <body>
-      <ul>
+      <div class="container">
         ${html}
-      </ul>
+      </div>
     </body>
   </html>
   `;
@@ -75,11 +112,11 @@ async function writeOtherHtml(data, filepath) {
   for (const item of data.questions) {
     if (item.question && Array.isArray(item.answers)) {
       console.log('svorin', item.answers);
-      content += `<div class="question">\n`;
-      content += `<p>${_.escape(item.question)}</p>\n`;
+      content += `<div class="question-container">\n`;
+      content += `<p class="question">${_.escape(item.question)}</p>\n`;
       for (const answer of item.answers) {
         if (answer.answer) {
-          content += `<label><input type="radio" name="question-${_.escape(
+          content += `<label class="answer"><input type="radio" name="question-${_.escape(
             item.question
           )}" value="${_.escape(answer.answer)}" data-correct="${
             answer.correct
@@ -99,17 +136,133 @@ async function writeOtherHtml(data, filepath) {
   <html>
     <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../styles.css">
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-width: 600px;
+      }
+
+      .link {
+        display: block;
+        width: 100%;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        color: black;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+      .link:hover {
+        background-color: #e0e0e0;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .title {
+        text-align: center;
+        flex: 1;
+      }
+
+      .quiz-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      } 
+
+      .question-container {
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+      }
+
+      .question {
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      .answer {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .submit-button, .again-button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .submit-button:hover, .again-button:hover {
+        background-color: #0056b3;
+      }
+
+      .submit-button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+    </style>
     <title>${title}</title>
     </head>
     <body>
-      <form id="quiz-form">
-        ${content}
-        <button type="button" id="submit-button">Submit</button>
-      </form>
+      <div class="container">
+        <header class="header">
+          <h1 class="title">${title}</h1>
+          <h2><a href="./index.html" class="link">Til baka</a></h2>
+        </header>
+        <form id="quiz-form" class="quiz-form">
+          ${content}
+          <button type="button" id="submit-button" class="submit-button" disabled>Submit</button>
+          <button type="button" id="again-button" class="again-button" style="display: none;">Again</button>
+        </form>
+      </div>
       <script>
+        function checkAllQuestionsAnswered() {
+          const questions = document.querySelectorAll('.question-container');
+          let allAnswered = true;
+          questions.forEach(question => {
+            const selectedAnswer = question.querySelector('input[type="radio"]:checked');
+            if (!selectedAnswer) {
+              allAnswered = false;
+            }
+          });
+          document.getElementById('submit-button').disabled = !allAnswered;
+        }
+
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+          radio.addEventListener('change', checkAllQuestionsAnswered);
+        });
+
         document.getElementById('submit-button').addEventListener('click', function() {
-          const questions = document.querySelectorAll('.question');
+          const questions = document.querySelectorAll('.question-container');
           questions.forEach(question => {
             const selectedAnswer = question.querySelector('input[type="radio"]:checked');
             if (selectedAnswer) {
@@ -117,7 +270,28 @@ async function writeOtherHtml(data, filepath) {
               selectedAnswer.parentElement.style.color = isCorrect ? 'green' : 'red';
             }
           });
+          // Hide the submit button
+          this.style.display = 'none';
+          // Show the again button
+          document.getElementById('again-button').style.display = 'block';
         });
+
+        document.getElementById('again-button').addEventListener('click', function() {
+          // Uncheck all radio buttons
+          const radios = document.querySelectorAll('input[type="radio"]');
+          radios.forEach(radio => {
+            radio.checked = false;
+            radio.parentElement.style.color = ''; // Reset color
+          });
+          // Hide the again button
+          this.style.display = 'none';
+          // Show the submit button
+          document.getElementById('submit-button').style.display = 'block';
+          document.getElementById('submit-button').disabled = true; // Disable submit button again
+        });
+
+        // Initial check to ensure the submit button is disabled if not all questions are answered
+        checkAllQuestionsAnswered();
       </script>
     </body>
   </html>
